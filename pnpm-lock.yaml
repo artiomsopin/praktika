@@ -20,6 +20,9 @@ importers:
       '@nestjs/platform-express':
         specifier: ^11.0.1
         version: 11.1.5(@nestjs/common@11.1.5(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.5)
+      csv-parse:
+        specifier: ^6.1.0
+        version: 6.1.0
       puppeteer:
         specifier: ^24.14.0
         version: 24.14.0(typescript@5.8.3)
@@ -1646,6 +1649,9 @@ packages:
   cross-spawn@7.0.6:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
     engines: {node: '>= 8'}
+
+  csv-parse@6.1.0:
+    resolution: {integrity: sha512-CEE+jwpgLn+MmtCpVcPtiCZpVtB6Z2OKPTr34pycYYoL7sxdOkXDdQ4lRiw6ioC0q6BLqhc6cKweCVvral8yhw==}
 
   data-uri-to-buffer@6.0.2:
     resolution: {integrity: sha512-7hvf7/GW8e86rW0ptuwS3OcBGDjIi6SZva7hCyWC0yYry2cOPmLIjXAUHI6DK2HsnwJd9ifmt57i8eV2n4YNpw==}
@@ -5338,6 +5344,8 @@ snapshots:
       path-key: 3.1.1
       shebang-command: 2.0.0
       which: 2.0.2
+
+  csv-parse@6.1.0: {}
 
   data-uri-to-buffer@6.0.2: {}
 

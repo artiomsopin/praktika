@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Frame, Page } from 'puppeteer';
-import { RowFields } from '../interfaces/raw-fields.interface';
+import { RowFields } from '../interfaces/row-fields.interface';
 
 @Injectable()
 export class TableExtractorService {
