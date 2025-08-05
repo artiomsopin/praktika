@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import puppeteer, { Page } from 'puppeteer';
+import puppeteer, { Frame, Page } from 'puppeteer';
 import { Credentials } from '../interfaces/credentials.interface';
 
 @Injectable()
@@ -15,12 +15,11 @@ export class ScraperService {
   async scrapeData() {
     const browser = await puppeteer.launch({ headless: false });
     const page = await browser.newPage();
-    await page.goto(`${this.basePvsUrl}/login`);
 
+    await page.goto(`${this.basePvsUrl}/login`);
     await this.authenticateUser(page, this.credentials);
 
     await page.goto(this.csvFilesUrlPath);
-
     await this.waitFullPageLoad(page);
 
     // await browser.close();
@@ -38,7 +37,9 @@ export class ScraperService {
   }
 
   private async enterPassword(page: Page, password: string) {
-    await page.type('input[name="j_password"]', password);
+    const passwordSelector = 'input[name="j_password"]';
+    await page.waitForSelector(passwordSelector, { visible: true });
+    await page.type(passwordSelector, password);
     await page.keyboard.press('Enter');
     await this.waitFullPageLoad(page);
   }
