@@ -36,7 +36,7 @@ export class TableExtractorService {
         document.querySelector('table.table');
       if (!table) throw new Error('Table not found');
 
-      const fieldNames = [
+      const fieldNames: (keyof RowFields)[] = [
         'fileName',
         'fileType',
         'fileSize',
@@ -49,10 +49,14 @@ export class TableExtractorService {
         );
 
         // Make objects from field names and cell values
-        return Object.fromEntries(fieldNames.map((key, i) => [key, cells[i]]));
+        const formattedRowFields = Object.fromEntries(
+          fieldNames.map((key, i) => [key, cells[i]]),
+        );
+
+        return formattedRowFields as unknown as RowFields;
       });
 
-      return rows as unknown as RowFields[];
+      return rows;
     });
     return tableData;
   }

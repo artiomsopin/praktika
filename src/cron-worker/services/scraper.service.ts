@@ -55,4 +55,6 @@ export class ScraperService {
     // Wait for the network to be fully idle
     await page.waitForNavigation({ waitUntil: 'networkidle0' });
   }
+
+  private getExistingFiles() {}
 }
