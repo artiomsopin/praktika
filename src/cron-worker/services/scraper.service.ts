@@ -1,11 +1,21 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import puppeteer, { Frame, Page } from 'puppeteer';
 import { Credentials } from '../interfaces/credentials.interface';
 import { TableExtractorService } from './table-extractor.service';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { TableRowFields } from '../interfaces/row-fields.interface';
+import { FileEntity } from 'src/prisma/entities/file.entity';
+import { CsvAggregatorService } from './csv-aggregator.service';
+import { ContentEntity } from 'src/prisma/entities/content.entity';
 
 @Injectable()
 export class ScraperService {
-  constructor(private readonly tableExtractorService: TableExtractorService) {}
+  constructor(
+    private readonly tableExtractorService: TableExtractorService,
+    private readonly prismaService: PrismaService,
+    private readonly csvAggregatorService: CsvAggregatorService,
+  ) {}
+  private readonly logger = new Logger(ScraperService.name);
 
   // Configuration for Puppeteer to scrape data from PVS
   private readonly credentials: Credentials = {
@@ -14,7 +24,6 @@ export class ScraperService {
   };
   private readonly basePvsUrl = process.env.PVS_URL || '';
   private readonly csvFilesUrlPath = `${this.basePvsUrl}/ord/file:^Analize/LK/Vedinimas/AHU1|view:hx:HxDirectoryList`;
-  private readonly fileRootUrl = '/ord?file:^Analize/LK/Vedinimas/AHU1/';
 
   async scrapeData() {
     const browser = await puppeteer.launch({ headless: false });
@@ -26,6 +35,16 @@ export class ScraperService {
     await page.goto(this.csvFilesUrlPath);
 
     const tableData = await this.tableExtractorService.extract(page);
+    this.logger.log(`Extracted ${tableData.length} rows from the table.`);
+
+    const newFiles = await this.getNewFiles(tableData);
+    if (newFiles.length === 0) {
+      this.logger.log('No new files to save.');
+      await browser.close();
+      return;
+    }
+
+    await this.saveNewFiles(newFiles, page);
 
     // await browser.close();
   }
@@ -33,6 +52,7 @@ export class ScraperService {
   private async authenticateUser(page: Page, credentials: Credentials) {
     await this.enterLogin(page, credentials.login);
     await this.enterPassword(page, credentials.pass);
+    this.logger.log('User authenticated successfully');
   }
 
   private async enterLogin(page: Page, login: string) {
@@ -56,5 +76,45 @@ export class ScraperService {
     await page.waitForNavigation({ waitUntil: 'networkidle0' });
   }
 
-  private getExistingFiles() {}
+  private async getNewFiles(
+    tableData: TableRowFields[],
+  ): Promise<TableRowFields[]> {
+    const existingFiles = await this.prismaService.getAllExistingFiles();
+    this.logger.debug(`Found ${existingFiles.length} existing files.`);
+
+    const newFiles = tableData.filter((row) => {
+      return !existingFiles.some(
+        (file) => file.file_name === row.name && file.size === Number(row.size),
+      );
+    });
+    this.logger.debug(`Found ${newFiles.length} new files to save.`);
+    return newFiles;
+  }
+
+  private async saveNewFiles(
+    files: TableRowFields[],
+    page: Page,
+  ): Promise<void> {
+    const formattedFiles: FileEntity[] = [];
+
+    for (const file of files) {
+      const csvRecords = await this.csvAggregatorService.getCsvParsedRecords(
+        page,
+        file.name,
+      );
+
+      const formattedRecords: ContentEntity[] =
+        this.csvAggregatorService.formatCsvRecords(csvRecords);
+
+      formattedFiles.push({
+        file_name: file.name,
+        file_type: file.type,
+        size: Number(file.size),
+        modified: this.csvAggregatorService.csvIsoFormatToDate(file.modified),
+        content: formattedRecords,
+      });
+    }
+
+    await this.prismaService.saveNewFiles(formattedFiles);
+  }
 }

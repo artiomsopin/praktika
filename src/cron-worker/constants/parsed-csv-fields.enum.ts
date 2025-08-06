@@ -1,0 +1,17 @@
+export enum ParsedCSVFields {
+  Timestamp = 'timestamp',
+  UzdTemp = 'Uzd_Temp_value (°C)',
+  Sildymas = 'Sildymas_value (%)',
+  Rekuperatorius = 'Rekuperatorius_value',
+  TempRezimas = 'Temp_Rezimas_value',
+  IstraukiamaTemp = 'Istraukiama_Temp_value (°C)',
+  TiekiamaTemp = 'Tiekiama_Temp_value (°C)',
+  IsmetamaTemp = 'Ismetama_Temp_value (°C)',
+  GriztamoVTemp = 'Griztamo_V_temp_value (°C)',
+  LaukoTemp = 'Lauko_Temp_value (°C)',
+  Saldymas = 'Saldymas_value (%)',
+  IstraukiamasSrautas = 'Istraukiamas_Srautas_value (m³/hr)',
+  TiekimoVent = 'Tiekimo_Vent_value (%)',
+  TiekimasSrautas = 'Tiekimas_Srautas_value (m³/hr)',
+  IstraukimoVent = 'Istraukimo_Vent_value (%)',
+}

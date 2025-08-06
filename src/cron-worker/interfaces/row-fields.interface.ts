@@ -1,6 +1,6 @@
-export interface RowFields {
-  fileName: string;
-  fileType: string;
-  fileSize: string;
-  timestamp: string; // ISO format
+export interface TableRowFields {
+  name: string;
+  type: string;
+  size: string;
+  modified: string; // ISO format
 }

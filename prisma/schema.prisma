@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   output   = "../generated/prisma"
@@ -20,7 +14,7 @@ model File {
   size       Int
   modified   DateTime
   created_at DateTime @default(now())
-  content    Content?
+  content    Content[]
 }
 
 model Content {
@@ -41,6 +35,6 @@ model Content {
   tiekimas_srautas_value_m3_hr  Float
   istraukimo_vent_value_perc    Float
 
-  fileId Int @unique
-  file File @relation(fields: [fileId], references: [id])
+  file_id Int
+  file File @relation(fields: [file_id], references: [id])
 }

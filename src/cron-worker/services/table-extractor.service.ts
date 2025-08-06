@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { Frame, Page } from 'puppeteer';
-import { RowFields } from '../interfaces/row-fields.interface';
+import { TableRowFields } from '../interfaces/row-fields.interface';
 
 @Injectable()
 export class TableExtractorService {
   private readonly basePvsUrl = process.env.PVS_URL || '';
   private readonly targetFrameUrlPath = `${this.basePvsUrl}/ord/file:^Analize/LK/Vedinimas/AHU1|view:hx:HxDirectoryList|view:?fullScreen=true`;
 
-  public async extract(page: Page): Promise<RowFields[]> {
+  public async extract(page: Page): Promise<TableRowFields[]> {
     const targetFrame = this.getTargetFrame(page);
     if (!targetFrame) {
       throw new Error('Target frame not found');
@@ -29,18 +29,18 @@ export class TableExtractorService {
     return targetFrame || null;
   }
 
-  private async getTableData(targetFrame: Frame): Promise<RowFields[]> {
+  private async getTableData(targetFrame: Frame): Promise<TableRowFields[]> {
     const tableData = await targetFrame.evaluate(() => {
       // TODO: Check typing
       const table: HTMLTableElement | null =
         document.querySelector('table.table');
       if (!table) throw new Error('Table not found');
 
-      const fieldNames: (keyof RowFields)[] = [
-        'fileName',
-        'fileType',
-        'fileSize',
-        'timestamp',
+      const fieldNames: (keyof TableRowFields)[] = [
+        'name',
+        'type',
+        'size',
+        'modified', // ISO format
       ] as const;
 
       const rows = Array.from(table.rows).map((row) => {
@@ -53,7 +53,7 @@ export class TableExtractorService {
           fieldNames.map((key, i) => [key, cells[i]]),
         );
 
-        return formattedRowFields as unknown as RowFields;
+        return formattedRowFields as unknown as TableRowFields;
       });
 
       return rows;

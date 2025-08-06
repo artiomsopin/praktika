@@ -1,5 +1,5 @@
 export interface ParsedCSV {
-  timestamp: Date;
+  timestamp: string; // ISO format
   'Uzd_Temp_value (°C)': number;
   'Sildymas_value (%)': number;
   Rekuperatorius_value: number;

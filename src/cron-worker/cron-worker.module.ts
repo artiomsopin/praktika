@@ -3,6 +3,7 @@ import { CronWorkerService } from './services/cron-worker.service';
 import { ScraperService } from './services/scraper.service';
 import { CsvAggregatorService } from './services/csv-aggregator.service';
 import { TableExtractorService } from './services/table-extractor.service';
+import { PrismaModule } from 'src/prisma/prisma.module';
 
 @Module({
   providers: [
@@ -11,5 +12,6 @@ import { TableExtractorService } from './services/table-extractor.service';
     CsvAggregatorService,
     TableExtractorService,
   ],
+  imports: [PrismaModule],
 })
 export class CronWorkerModule {}
