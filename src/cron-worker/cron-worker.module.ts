@@ -4,6 +4,7 @@ import { ScraperService } from './services/scraper.service';
 import { CsvAggregatorService } from './services/csv-aggregator.service';
 import { TableExtractorService } from './services/table-extractor.service';
 import { PrismaModule } from 'src/prisma/prisma.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   providers: [
@@ -12,6 +13,6 @@ import { PrismaModule } from 'src/prisma/prisma.module';
     CsvAggregatorService,
     TableExtractorService,
   ],
-  imports: [PrismaModule],
+  imports: [PrismaModule, ScheduleModule.forRoot()],
 })
 export class CronWorkerModule {}

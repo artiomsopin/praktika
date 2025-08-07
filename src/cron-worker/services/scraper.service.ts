@@ -96,7 +96,6 @@ export class ScraperService {
     page: Page,
   ): Promise<void> {
     const formattedFiles: FileEntity[] = [];
-
     for (const file of files) {
       const csvRecords = await this.csvAggregatorService.getCsvParsedRecords(
         page,
