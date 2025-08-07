@@ -83,9 +83,7 @@ export class ScraperService {
     this.logger.debug(`Found ${existingFiles.length} existing files.`);
 
     const newFiles = tableData.filter((row) => {
-      return !existingFiles.some(
-        (file) => file.file_name === row.name && file.size === Number(row.size),
-      );
+      return !existingFiles.some((file) => file.file_name === row.name);
     });
     this.logger.debug(`Found ${newFiles.length} new files to save.`);
     return newFiles;
@@ -95,25 +93,34 @@ export class ScraperService {
     files: TableRowFields[],
     page: Page,
   ): Promise<void> {
-    const formattedFiles: FileEntity[] = [];
     for (const file of files) {
-      const csvRecords = await this.csvAggregatorService.getCsvParsedRecords(
-        page,
-        file.name,
+      this.logger.debug(`Processing file: ${JSON.stringify(file)}`);
+      const contentRecords =
+        await this.csvAggregatorService.getCsvParsedRecords(page, file.name);
+
+      const formattedContent: ContentEntity[] =
+        this.csvAggregatorService.formatCsvRecords(contentRecords);
+
+      const fileEntity: FileEntity = this.formatFileEntity(
+        file,
+        formattedContent,
       );
-
-      const formattedRecords: ContentEntity[] =
-        this.csvAggregatorService.formatCsvRecords(csvRecords);
-
-      formattedFiles.push({
-        file_name: file.name,
-        file_type: file.type,
-        size: Number(file.size),
-        modified: this.csvAggregatorService.csvIsoFormatToDate(file.modified),
-        content: formattedRecords,
-      });
+      await this.prismaService.saveNewFile(fileEntity);
     }
+  }
 
-    await this.prismaService.saveNewFiles(formattedFiles);
+  private formatFileEntity(
+    file: TableRowFields,
+    content: ContentEntity[],
+  ): FileEntity {
+    const fileEntity: FileEntity = {
+      file_name: file.name,
+      file_type: file.type,
+      size: file.size,
+      modified: this.csvAggregatorService.csvIsoFormatToDate(file.modified),
+      content: undefined,
+    };
+    this.logger.debug(`Formatted file entity: ${JSON.stringify(fileEntity)}`);
+    return fileEntity;
   }
 }

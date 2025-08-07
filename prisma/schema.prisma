@@ -11,7 +11,8 @@ datasource db {
 model File {
   id      Int     @id @default(autoincrement())
   file_name  String
-  size       Int
+  file_type  String
+  size       String
   modified   DateTime
   created_at DateTime @default(now())
   content    Content[]

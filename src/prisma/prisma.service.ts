@@ -18,4 +18,16 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
       skipDuplicates: true, // Avoid duplicates based on unique constraints
     });
   }
+
+  async saveNewFile(file: FileEntity): Promise<File> {
+    return this.file.create({
+      data: {
+        file_name: file.file_name,
+        size: file.size,
+        file_type: file.file_type,
+        modified: file.modified,
+        content: file.content ? { create: file.content } : undefined,
+      },
+    });
+  }
 }

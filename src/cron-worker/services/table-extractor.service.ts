@@ -23,7 +23,6 @@ export class TableExtractorService {
 
   // Find the target frame by URL path where the table is located
   private getTargetFrame(page: Page): Frame | null {
-    console.log(page.frames().map((frame) => frame.url()));
     const targetFrame = page
       .frames()
       .find((frame) => frame.url().includes(this.targetFrameUrlPath));
@@ -59,6 +58,9 @@ export class TableExtractorService {
 
       return rows;
     });
+
+    tableData.shift(); // Remove header row
+
     return tableData;
   }
 }
