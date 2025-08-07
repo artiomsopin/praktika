@@ -5,7 +5,7 @@ import { TableRowFields } from '../interfaces/row-fields.interface';
 @Injectable()
 export class TableExtractorService {
   private readonly basePvsUrl = process.env.PVS_URL || '';
-  private readonly targetFrameUrlPath = `${this.basePvsUrl}/ord/file:^Analize/LK/Vedinimas/AHU1|view:hx:HxDirectoryList|view:?fullScreen=true`;
+  private readonly targetFrameUrlPath = `${this.basePvsUrl}/ord/file:%5EAnalize/LK/Vedinimas/AHU1%7Cview:hx:HxDirectoryList%7Cview:?fullScreen=true`;
 
   public async extract(page: Page): Promise<TableRowFields[]> {
     const targetFrame = this.getTargetFrame(page);
@@ -23,6 +23,7 @@ export class TableExtractorService {
 
   // Find the target frame by URL path where the table is located
   private getTargetFrame(page: Page): Frame | null {
+    console.log(page.frames().map((frame) => frame.url()));
     const targetFrame = page
       .frames()
       .find((frame) => frame.url().includes(this.targetFrameUrlPath));
