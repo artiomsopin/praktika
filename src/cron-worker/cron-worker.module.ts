@@ -13,6 +13,6 @@ import { ScheduleModule } from '@nestjs/schedule';
     CsvAggregatorService,
     TableExtractorService,
   ],
-  imports: [PrismaModule, ScheduleModule.forRoot()],
+  imports: [PrismaModule],
 })
 export class CronWorkerModule {}

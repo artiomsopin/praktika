@@ -22,6 +22,7 @@ export class TableExtractorService {
   }
 
   // Find the target frame by URL path where the table is located
+  // Because the table is inside a specific frame, we need to locate it
   private getTargetFrame(page: Page): Frame | null {
     const targetFrame = page
       .frames()
@@ -31,7 +32,6 @@ export class TableExtractorService {
 
   private async getTableData(targetFrame: Frame): Promise<TableRowFields[]> {
     const tableData = await targetFrame.evaluate(() => {
-      // TODO: Check typing
       const table: HTMLTableElement | null =
         document.querySelector('table.table');
       if (!table) throw new Error('Table not found');
@@ -59,7 +59,8 @@ export class TableExtractorService {
       return rows;
     });
 
-    tableData.shift(); // Remove header row
+    // Remove header row
+    tableData.shift();
 
     return tableData;
   }

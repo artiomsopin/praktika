@@ -3,8 +3,9 @@ generator client {
   output   = "../generated/prisma"
 }
 
+// More details: https://www.prisma.io/docs/orm/reference/supported-databases
 datasource db {
-  provider = "postgresql"
+  provider = "postgresql" // Example: "postgresql", "mysql", "sqlite", etc.
   url      = env("DATABASE_URL")
 }
 

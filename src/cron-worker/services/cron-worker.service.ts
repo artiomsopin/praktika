@@ -5,6 +5,7 @@ import { Cron } from '@nestjs/schedule';
 @Injectable()
 export class CronWorkerService implements OnModuleInit {
   private readonly logger = new Logger(CronWorkerService.name);
+
   constructor(private readonly scraperService: ScraperService) {}
 
   // This method is called when the module is initialized
@@ -13,7 +14,10 @@ export class CronWorkerService implements OnModuleInit {
     this.runCronJob();
   }
 
-  @Cron(process.env.CRON_JOB_SCHEDULE || '0 0 0 * * *') // Default to every day at 12:00 AM
+  // Default to every day at 12:00 AM
+  @Cron(process.env.CRON_JOB_SCHEDULE || '0 0 0 * * *', {
+    timeZone: 'Europe/Vilnius',
+  })
   async runCronJob() {
     try {
       await this.scraperService.scrapeData();

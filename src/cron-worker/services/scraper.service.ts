@@ -26,7 +26,7 @@ export class ScraperService {
   private readonly csvFilesUrlPath = `${this.basePvsUrl}/ord/file:^Analize/LK/Vedinimas/AHU1|view:hx:HxDirectoryList`;
 
   async scrapeData() {
-    const browser = await puppeteer.launch({ headless: false });
+    const browser = await puppeteer.launch({ headless: true });
     const page = await browser.newPage();
 
     await page.goto(`${this.basePvsUrl}/login`);
