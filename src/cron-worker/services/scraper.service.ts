@@ -118,7 +118,7 @@ export class ScraperService {
       file_type: file.type,
       size: file.size,
       modified: this.csvAggregatorService.csvIsoFormatToDate(file.modified),
-      content: undefined,
+      content,
     };
     this.logger.debug(`Formatted file entity: ${JSON.stringify(fileEntity)}`);
     return fileEntity;

@@ -1,15 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Page } from 'puppeteer';
 import { ParsedCSV } from '../interfaces/parsed-csv.interface';
 import { parse } from 'csv-parse/sync';
 import { DateTime } from 'luxon';
 import { ContentEntity } from 'src/prisma/entities/content.entity';
-import { ParsedCSVFields } from '../constants/parsed-csv-fields.enum';
+import { ParsedCSVFields as CSVFields } from '../constants/parsed-csv-fields.enum';
+import { toFloatOrNull } from '../helpers/toFloatOrNull.helper';
 
 @Injectable()
 export class CsvAggregatorService {
+  private readonly logger = new Logger(CsvAggregatorService.name);
   private readonly fileRootUrl = '/ord?file:^Analize/LK/Vedinimas/AHU1/';
-  private readonly csvDateFormat = 'dd-MMM-yy h:mm:ss a z';
 
   public async getCsvParsedRecords(
     page: Page,
@@ -56,37 +57,40 @@ export class CsvAggregatorService {
     const formattedRecords: ContentEntity[] = records.map((record) => {
       const formattedRecord: ContentEntity = {
         timestamp: this.csvIsoFormatToDate(record.timestamp),
-        uzd_temp_value_celsius: Number(record[ParsedCSVFields.UzdTemp]),
-        sildymas_value_perc: Number(record[ParsedCSVFields.Sildymas]),
-        rekuperatorius_value_perc: Number(
-          record[ParsedCSVFields.Rekuperatorius],
+        uzd_temp_value_celsius: toFloatOrNull(record[CSVFields.UzdTemp]),
+        sildymas_value_perc: toFloatOrNull(record[CSVFields.Sildymas]),
+        rekuperatorius_value_perc: toFloatOrNull(
+          record[CSVFields.Rekuperatorius],
         ),
-        temp_rezimas_value: Number(record[ParsedCSVFields.TempRezimas]),
-        istraukiama_temp_value_celsius: Number(
-          record[ParsedCSVFields.IstraukiamaTemp],
+        temp_rezimas_value: toFloatOrNull(record[CSVFields.TempRezimas]),
+        istraukiama_temp_value_celsius: toFloatOrNull(
+          record[CSVFields.IstraukiamaTemp],
         ),
-        tiekiama_temp_value_celsius: Number(
-          record[ParsedCSVFields.TiekiamaTemp],
+        tiekiama_temp_value_celsius: toFloatOrNull(
+          record[CSVFields.TiekiamaTemp],
         ),
-        ismetama_temp_value_celsius: Number(
-          record[ParsedCSVFields.IsmetamaTemp],
+        ismetama_temp_value_celsius: toFloatOrNull(
+          record[CSVFields.IsmetamaTemp],
         ),
-        griztamo_v_temp_value_celsius: Number(
-          record[ParsedCSVFields.GriztamoVTemp],
+        griztamo_v_temp_value_celsius: toFloatOrNull(
+          record[CSVFields.GriztamoVTemp],
         ),
-        lauko_temp_value_celsius: Number(record[ParsedCSVFields.LaukoTemp]),
-        saldymas_value_perc: Number(record[ParsedCSVFields.Saldymas]),
-        istraukiamas_srautas_value_m3_hr: Number(
-          record[ParsedCSVFields.IstraukiamasSrautas],
+        lauko_temp_value_celsius: toFloatOrNull(record[CSVFields.LaukoTemp]),
+        saldymas_value_perc: toFloatOrNull(record[CSVFields.Saldymas]),
+        istraukiamas_srautas_value_m3_hr: toFloatOrNull(
+          record[CSVFields.IstraukiamasSrautas],
         ),
-        tiekimo_vent_value_perc: Number(record[ParsedCSVFields.TiekimoVent]),
-        tiekimas_srautas_value_m3_hr: Number(
-          record[ParsedCSVFields.TiekimasSrautas],
+        tiekimo_vent_value_perc: toFloatOrNull(record[CSVFields.TiekimoVent]),
+        tiekimas_srautas_value_m3_hr: toFloatOrNull(
+          record[CSVFields.TiekimasSrautas],
         ),
-        istraukimo_vent_value_perc: Number(
-          record[ParsedCSVFields.IstraukimoVent],
+        istraukimo_vent_value_perc: toFloatOrNull(
+          record[CSVFields.IstraukimoVent],
         ),
       };
+      this.logger.debug(
+        `Formatted CSV record: ${JSON.stringify(formattedRecord)}`,
+      );
       return formattedRecord;
     });
 

@@ -11,31 +11,31 @@ datasource db {
 
 model File {
   id      Int     @id @default(autoincrement())
-  file_name  String
+  file_name  String @unique
   file_type  String
   size       String
   modified   DateTime
   created_at DateTime @default(now())
   content    Content[]
-}
+} 
 
 model Content {
   id                             Int      @id @default(autoincrement())
   timestamp                      DateTime
-  uzd_temp_value_celsius         Float
-  sildymas_value_perc           Float
-  rekuperatorius_value_perc     Float
-  temp_rezimas_value            Float
-  istraukiama_temp_value_celsius Float
-  tiekiama_temp_value_celsius   Float
-  ismetama_temp_value_celsius   Float
-  griztamo_v_temp_value_celsius Float
-  lauko_temp_value_celsius      Float
-  saldymas_value_perc           Float
-  istraukiamas_srautas_value_m3_hr Float
-  tiekimo_vent_value_perc       Float
-  tiekimas_srautas_value_m3_hr  Float
-  istraukimo_vent_value_perc    Float
+  uzd_temp_value_celsius         Float?
+  sildymas_value_perc           Float?
+  rekuperatorius_value_perc     Float?
+  temp_rezimas_value            Float?
+  istraukiama_temp_value_celsius Float?
+  tiekiama_temp_value_celsius   Float?
+  ismetama_temp_value_celsius   Float?
+  griztamo_v_temp_value_celsius Float?
+  lauko_temp_value_celsius      Float?
+  saldymas_value_perc           Float?
+  istraukiamas_srautas_value_m3_hr Float?
+  tiekimo_vent_value_perc       Float?
+  tiekimas_srautas_value_m3_hr  Float?
+  istraukimo_vent_value_perc    Float?
 
   file_id Int
   file File @relation(fields: [file_id], references: [id])

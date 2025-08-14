@@ -1,0 +1,15 @@
+-- AlterTable
+ALTER TABLE "public"."Content" ALTER COLUMN "uzd_temp_value_celsius" DROP NOT NULL,
+ALTER COLUMN "sildymas_value_perc" DROP NOT NULL,
+ALTER COLUMN "rekuperatorius_value_perc" DROP NOT NULL,
+ALTER COLUMN "temp_rezimas_value" DROP NOT NULL,
+ALTER COLUMN "istraukiama_temp_value_celsius" DROP NOT NULL,
+ALTER COLUMN "tiekiama_temp_value_celsius" DROP NOT NULL,
+ALTER COLUMN "ismetama_temp_value_celsius" DROP NOT NULL,
+ALTER COLUMN "griztamo_v_temp_value_celsius" DROP NOT NULL,
+ALTER COLUMN "lauko_temp_value_celsius" DROP NOT NULL,
+ALTER COLUMN "saldymas_value_perc" DROP NOT NULL,
+ALTER COLUMN "istraukiamas_srautas_value_m3_hr" DROP NOT NULL,
+ALTER COLUMN "tiekimo_vent_value_perc" DROP NOT NULL,
+ALTER COLUMN "tiekimas_srautas_value_m3_hr" DROP NOT NULL,
+ALTER COLUMN "istraukimo_vent_value_perc" DROP NOT NULL;
