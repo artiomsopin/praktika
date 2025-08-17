@@ -59,17 +59,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
       select: selectedFields,
     });
     this.logger.debug(`Found ${allContent.length} files with content.`);
-    console.log(
-      `first file with content: ${JSON.stringify(allContent[0])}`,
-    );
 
     return allContent;
-  }
-
-  async findManyContent() {
-    const content = await this.content.findMany();
-    console.log(`Found ${content.length} content records.`);
-    console.log('Content records:', JSON.stringify(content));
-    return content;
   }
 }

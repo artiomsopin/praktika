@@ -19,9 +19,4 @@ export class ApiController {
     };
     return this.apiService.getAllContent(params);
   }
-
-  @Get('health')
-  async healthCheck() {
-    return await this.apiService.healthCheck();
-  }
 }

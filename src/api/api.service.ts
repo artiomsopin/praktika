@@ -84,8 +84,4 @@ export class ApiService {
 
     return cleanedTimestamp;
   }
-
-  async healthCheck() {
-    console.log(await this.prismaService.findManyContent());
-  }
 }
