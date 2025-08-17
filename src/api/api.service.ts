@@ -14,6 +14,8 @@ import { CleanedSearchTimestamps } from './interfaces/cleaned-search-timestamps.
 @Injectable()
 export class ApiService {
   private readonly logger = new Logger(ApiService.name);
+
+  private readonly validContentFields = Object.keys(AllContentFieldsSelected);
   constructor(
     private readonly prismaService: PrismaService,
     private readonly csvAggregatorService: CsvAggregatorService,
@@ -29,7 +31,7 @@ export class ApiService {
         select = this.getSelectedFields(params.contentFields);
       }
     } catch (error) {
-      this.logger.error('Error parsing content fields', error);
+      this.logger.error('Error parsing content fields', error.message);
       throw new BadRequestException('Invalid content fields format');
     }
 
@@ -54,11 +56,21 @@ export class ApiService {
       .split(',')
       .map((f) => f.trim())
       .reduce((acc, field) => {
+        this.validateField(field);
         acc[field] = true;
         return acc;
       }, {});
     this.logger.debug('Content selector:', JSON.stringify(selectedFields));
     return selectedFields;
+  }
+
+  private validateField(field: string) {
+    if (!this.validContentFields.includes(field)) {
+      this.logger.warn(`Invalid field requested: ${field}`);
+      throw new BadRequestException(
+        `Invalid field requested: ${field}. Valid fields are: ${this.validContentFields.join(', ')}`,
+      );
+    }
   }
 
   private getCleanedTimestamps(

@@ -55,6 +55,6 @@ pnpm run start:dev
 
 ---
 
-### Open in Browser
+### Documentation
 
-- Swagger API: [http://localhost:YOUR_API_PORT/swagger](http://localhost:YOUR_API_PORT/swagger)
+- Swagger API: [http://localhost:YOUR_API_PORT/api/swagger](http://localhost:YOUR_API_PORT/api/swagger)
