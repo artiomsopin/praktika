@@ -88,9 +88,6 @@ export class CsvAggregatorService {
           record[CSVFields.IstraukimoVent],
         ),
       };
-      this.logger.debug(
-        `Formatted CSV record: ${JSON.stringify(formattedRecord)}`,
-      );
       return formattedRecord;
     });
 

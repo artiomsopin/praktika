@@ -46,7 +46,7 @@ export class ScraperService {
 
     await this.saveNewFiles(newFiles, page);
 
-    // await browser.close();
+    await browser.close();
   }
 
   private async authenticateUser(page: Page, credentials: Credentials) {
@@ -89,7 +89,7 @@ export class ScraperService {
     return newFiles;
   }
 
-  private async saveNewFiles(
+  private async   saveNewFiles(
     files: TableRowFields[],
     page: Page,
   ): Promise<void> {
